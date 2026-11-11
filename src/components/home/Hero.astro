@@ -10,7 +10,7 @@ interface Props {
 const { t } = Astro.props;
 ---
 
-<section id="hero" class="relative overflow-hidden" style="background: var(--sky-gradient)">
+<section id="hero" class="hero-sky relative overflow-hidden max-lg:flex max-lg:min-h-svh max-lg:flex-col max-lg:justify-center">
   <!-- Sun glow -->
   <div
     aria-hidden="true"
@@ -18,15 +18,15 @@ const { t } = Astro.props;
     style="background: radial-gradient(closest-side, rgb(255 255 255 / 0.85), rgb(255 244 220 / 0.55) 12%, rgb(255 230 184 / 0.18) 35%, transparent 100%)"
   ></div>
 
-  <div class="relative z-10 mx-auto flex max-w-[1320px] flex-col items-center px-5 pt-[96px] text-center text-white lg:pt-[150px]">
+  <div class="relative z-10 mx-auto flex w-full max-w-[1320px] flex-col items-center px-5 pt-28 pb-36 text-center text-white lg:pt-[150px] lg:pb-0">
     <p class="glass-dark inline-flex items-center gap-2 rounded-full py-1.5 ps-1.5 pe-4 text-[13px] lg:text-[14px]" data-hero-item>
       <span class="rounded-full bg-amber px-2.5 py-0.5 text-[12px] font-semibold text-ink">{t.hero.tag}</span>
       {t.hero.badge}
     </p>
-    <h1 class="mt-[18px] text-[34px] leading-[42px] font-bold tracking-[-0.6px] lg:mt-[26px] lg:text-[84px] lg:leading-[87px] lg:tracking-[-1.5px]" data-hero-item data-hero-lead>
+    <h1 class="mt-[18px] text-[34px] leading-[42px] font-bold tracking-[-0.6px] md:text-[54px] md:leading-[62px] lg:mt-[26px] lg:text-[84px] lg:leading-[87px] lg:tracking-[-1.5px]" data-hero-item data-hero-lead>
       {t.hero.title[0]}<br />{t.hero.title[1]}
     </h1>
-    <p class="mt-[18px] max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 lg:mt-[26px] lg:max-w-[700px] lg:text-[20px] lg:leading-[31px]" data-hero-item>{t.hero.sub.split(", ").map((part, i, all) => <>{part}{i < all.length - 1 && <>,<br class="hidden lg:inline" /> </>}</>)}</p>
+    <p class="mt-[18px] max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 md:text-[18px] lg:mt-[26px] lg:max-w-[700px] lg:text-[20px] lg:leading-[31px]" data-hero-item>{t.hero.sub.split(", ").map((part, i, all) => <>{part}{i < all.length - 1 && <>,<br class="hidden lg:inline" /> </>}</>)}</p>
     <div class="mt-6 flex w-full max-w-[335px] flex-col gap-2.5 sm:w-auto sm:max-w-none sm:flex-row lg:mt-[26px] lg:gap-3" data-hero-item>
       <a href="#demo" class="btn btn-light rounded-full bg-white px-8 py-4 text-[16px] font-medium text-ink">
         {t.hero.primary}
@@ -56,18 +56,11 @@ const { t } = Astro.props;
     </div>
   </div>
 
-  <!-- Mobile and tablet composition: dashboard cropped to its start side, two floating cards -->
-  <div class="relative mt-10 h-[372px] select-none lg:hidden" role="img" aria-label={t.hero.productLabel} style="--cs:0.55">
-    <div aria-hidden="true">
-      <Cloud name="far-l" x={-300} y={-30} />
-      <Cloud name="far-r" x={60} y={-60} />
-      <div data-hero-window class="absolute top-[32px] start-4 scale-[0.62] ltr:origin-top-left rtl:origin-top-right md:scale-[0.8]">
-        <AppWindow t={t.app} />
-      </div>
-      <Cloud name="floor" x={-1000} y={330} class="z-10" />
-      <FloatCards t={t.floats} which="call" class="float absolute top-0 end-3.5 z-20 !bg-white/95 scale-[0.9] ltr:origin-top-right rtl:origin-top-left" style="--d:0s" />
-      <FloatCards t={t.floats} which="whatsapp" class="float absolute top-[236px] start-3.5 z-20 !bg-white/95 scale-[0.88] ltr:origin-top-left rtl:origin-top-right" style="--d:1.2s" />
-    </div>
+  <!-- Mobile and tablet: no product composition, just a soft cloud bank under the centred message -->
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-[300px] select-none lg:hidden" style="--cs:0.6">
+    <Cloud name="far-l" x={-330} y={150} class="opacity-80" />
+    <Cloud name="far-r" x={40} y={120} class="opacity-80" />
+    <Cloud name="floor" x={-1030} y={250} />
   </div>
 </section>
 
