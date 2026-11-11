@@ -101,7 +101,7 @@
 
 /* Hero sky: on phones the copy sits mid-screen, so the blue holds deeper through the middle for contrast. */
 .hero-sky {
-  background: linear-gradient(180deg, #1f6bd6 0%, #3381e3 38%, #69a8ee 66%, #b9dbf8 84%, #ffffff 100%);
+  background: linear-gradient(180deg, #1f6bd6 0%, #3381e3 40%, #5a9cec 72%, #8cbff3 88%, #d6eafb 96%, #ffffff 100%);
 }
 @media (width >= 64rem) {
   .hero-sky {

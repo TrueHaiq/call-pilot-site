@@ -18,7 +18,7 @@ const { t } = Astro.props;
     style="background: radial-gradient(closest-side, rgb(255 255 255 / 0.85), rgb(255 244 220 / 0.55) 12%, rgb(255 230 184 / 0.18) 35%, transparent 100%)"
   ></div>
 
-  <div class="relative z-10 mx-auto flex w-full max-w-[1320px] flex-col items-center px-5 pt-28 pb-36 text-center text-white lg:pt-[150px] lg:pb-0">
+  <div class="relative z-10 mx-auto flex w-full max-w-[1320px] flex-col items-center px-5 pt-24 pb-24 text-center text-white lg:pt-[150px] lg:pb-0">
     <p class="glass-dark inline-flex items-center gap-2 rounded-full py-1.5 ps-1.5 pe-4 text-[13px] lg:text-[14px]" data-hero-item>
       <span class="rounded-full bg-amber px-2.5 py-0.5 text-[12px] font-semibold text-ink">{t.hero.tag}</span>
       {t.hero.badge}
@@ -38,7 +38,7 @@ const { t } = Astro.props;
   </div>
 
   <!-- Bottom fade: sky and clouds melt into the white page below -->
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[180px] bg-gradient-to-b from-white/0 via-white/70 to-white lg:h-[260px]"></div>
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[70px] bg-gradient-to-b from-white/0 via-white/70 to-white lg:h-[260px]"></div>
 
   <!-- Desktop composition (design: 1440 x 1240 frame, window at y630) -->
   <div class="relative mx-auto mt-[73px] hidden h-[610px] w-[1120px] select-none lg:block" role="img" aria-label={t.hero.productLabel}>
@@ -57,10 +57,10 @@ const { t } = Astro.props;
   </div>
 
   <!-- Mobile and tablet: no product composition, just a soft cloud bank under the centred message -->
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-[300px] select-none lg:hidden" style="--cs:0.6">
-    <Cloud name="far-l" x={-330} y={150} class="opacity-80" />
-    <Cloud name="far-r" x={40} y={120} class="opacity-80" />
-    <Cloud name="floor" x={-1030} y={250} />
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-[150px] select-none lg:hidden" style="--cs:0.5">
+    <Cloud name="far-l" x={-380} y={70} class="opacity-70" />
+    <Cloud name="far-r" x={60} y={50} class="opacity-70" />
+    <Cloud name="floor" x={-1050} y={150} />
   </div>
 </section>
 
