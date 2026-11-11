@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* Placeholder palette and fonts: replaced once the brand brief lands. */
+@theme {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-ink: #16181d;
+  --color-ink-muted: #5d6470;
+  --color-line: #e4e6ea;
+  --color-accent: #3b5bfd;
+  --color-accent-ink: #ffffff;
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans);
+
+  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+
+  --container: 75rem;
+  --container-wide: 90rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
+  --duration-reveal: 700ms;
+}
+
+:root {
+  --space-section: clamp(6rem, 4rem + 8vw, 10rem);
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility section {
+  padding-block: var(--space-section);
+}
+
+/* Hidden start states only apply when JS runs, so content never disappears without it. */
+html.js [data-reveal],
+html.js [data-reveal-stagger] > * {
+  opacity: 0;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Reduced motion is handled per animation (gentler, not zero); see §7.4 of the design doc. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

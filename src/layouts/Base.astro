@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { getLocale, locales, stripLocale, type Locale } from "../i18n/ui";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "" } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const path = stripLocale(Astro.url.pathname).replace(/^\//, "");
+---
+
+<!doctype html>
+<html lang={locale} dir={locales[locale].dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      Astro.site &&
+        (Object.keys(locales) as Locale[]).map((code) => (
+          <link rel="alternate" hreflang={locales[code].hreflang} href={getAbsoluteLocaleUrl(code, path)} />
+        ))
+    }
+    <title>{title}</title>
+    <script is:inline>document.documentElement.classList.add("js");</script>
+  </head>
+  <body class="min-h-dvh">
+    <slot />
+    <script>
+      import { initReveals, initSmoothScroll } from "../scripts/motion";
+      initSmoothScroll();
+      initReveals();
+    </script>
+  </body>
+</html>

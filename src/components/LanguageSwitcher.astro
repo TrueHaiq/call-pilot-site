@@ -1,0 +1,28 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getLocale, locales, stripLocale, useTranslations, type Locale } from "../i18n/ui";
+
+const current = getLocale(Astro.currentLocale);
+const t = useTranslations(current);
+const path = stripLocale(Astro.url.pathname).replace(/^\//, "");
+---
+
+<nav aria-label={t("lang.switch")}>
+  <ul class="flex gap-4">
+    {
+      (Object.keys(locales) as Locale[]).map((code) => (
+        <li>
+          <a
+            href={getRelativeLocaleUrl(code, path)}
+            hreflang={locales[code].hreflang}
+            lang={code}
+            aria-current={code === current ? "page" : undefined}
+            class="text-ink-muted aria-[current=page]:text-ink"
+          >
+            {locales[code].label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
