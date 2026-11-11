@@ -1,4 +1,4 @@
-import { animate, inView, stagger } from "motion";
+import { animate, inView, scroll, stagger } from "motion";
 import Lenis from "lenis";
 
 export const ease = {
@@ -44,6 +44,42 @@ export function initReveals(root: ParentNode = document) {
     const delay = staggerItems ? stagger(gap, { ease: "easeOut" }) : 0;
     inView(parent, () => void animate(children, keyframes, { ...options, delay }), {
       amount: 0.2,
+    });
+  });
+}
+
+/**
+ * In-view sequences: a container with [data-seq-group] plays its [data-seq] children once,
+ * as a wave, when it scrolls into view. Gap and start delay come from data attributes.
+ */
+export function initSequences(root: ParentNode = document) {
+  if (reducedMotion()) return;
+  document.documentElement.classList.add("motion-ready");
+  root.querySelectorAll<HTMLElement>("[data-seq-group]").forEach((group) => {
+    const gap = Number(group.dataset.seqGroup || 0.12);
+    const start = Number(group.dataset.seqStart || 0.15);
+    const items = Array.from(group.querySelectorAll<HTMLElement>("[data-seq]"));
+    inView(
+      group,
+      () => void animate(items, { opacity: [0, 1], y: [8, 0] }, { duration: 0.5, ease: ease.out, delay: stagger(gap, { startDelay: start, ease: "easeOut" }) }),
+      { amount: 0.4 },
+    );
+  });
+}
+
+/**
+ * Scroll parallax for decorative layers. [data-parallax="px"] moves that many pixels:
+ * range "leave" (default) while its section scrolls out the top, "enter" while it scrolls in.
+ */
+export function initParallax(root: ParentNode = document) {
+  if (reducedMotion()) return;
+  root.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
+    const distance = Number(el.dataset.parallax || 40);
+    const section = el.closest<HTMLElement>("section, [data-parallax-root]") ?? el;
+    const enter = el.dataset.parallaxRange === "enter";
+    scroll(animate(el, { y: enter ? [distance, 0] : [0, distance] }, { ease: "linear" }), {
+      target: section,
+      offset: enter ? ["start end", "start start"] : ["start start", "end start"],
     });
   });
 }

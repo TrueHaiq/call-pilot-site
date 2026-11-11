@@ -15,7 +15,7 @@ const otherLabel = other === "en" ? "EN" : "עב";
 const dir = locales[locale].dir;
 ---
 
-<header class="group/nav fixed inset-x-0 top-0 z-40 px-3 pt-3 transition-[padding] duration-300 lg:px-0 lg:pt-7 data-scrolled:lg:pt-3" data-nav>
+<header class="group/nav fixed select-none inset-x-0 top-0 z-40 px-3 pt-3 transition-[padding] duration-300 lg:px-0 lg:pt-7 data-scrolled:lg:pt-3" data-nav>
   <!-- The bar keeps the logo on the left in both languages (as in the design); text groups keep their own direction. -->
   <nav
     aria-label={t.label}
@@ -36,7 +36,7 @@ const dir = locales[locale].dir;
       <a href={getRelativeLocaleUrl(other, "")} hreflang={locales[other].hreflang} lang={other} class="rounded-md text-[13px] font-medium opacity-90 hover:opacity-100">
         {otherLabel}
       </a>
-      <a href="#demo" dir={dir} class="rounded-full bg-white px-5 py-2.5 text-[15px] font-medium text-ink shadow-[0_8px_20px_-8px_rgb(14_58_128/0.4)] transition-[transform,background-color,color] duration-200 active:scale-[0.97] group-data-scrolled/nav:bg-ink group-data-scrolled/nav:text-white">
+      <a href="#demo" dir={dir} class="btn btn-light rounded-full bg-white px-5 py-2.5 text-[15px] font-medium text-ink group-data-scrolled/nav:bg-ink group-data-scrolled/nav:text-white">
         {t.cta}
       </a>
     </div>
@@ -68,7 +68,7 @@ const dir = locales[locale].dir;
           </a>
         </li>
       </ul>
-      <a href="#demo" class="mt-2 block rounded-full bg-ink py-3.5 text-center text-[16px] font-medium text-white">{t.cta}</a>
+      <a href="#demo" class="btn btn-ink mt-2 block rounded-full bg-ink py-3.5 text-center text-[16px] font-medium text-white">{t.cta}</a>
     </div>
   </nav>
 </header>

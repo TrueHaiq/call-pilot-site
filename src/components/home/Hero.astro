@@ -28,10 +28,10 @@ const { t } = Astro.props;
     </h1>
     <p class="mt-[18px] max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 lg:mt-[26px] lg:max-w-[700px] lg:text-[20px] lg:leading-[31px]" data-hero-item>{t.hero.sub.split(", ").map((part, i, all) => <>{part}{i < all.length - 1 && <>,<br class="hidden lg:inline" /> </>}</>)}</p>
     <div class="mt-6 flex w-full max-w-[335px] flex-col gap-2.5 sm:w-auto sm:max-w-none sm:flex-row lg:mt-[26px] lg:gap-3" data-hero-item>
-      <a href="#demo" class="rounded-full bg-white px-8 py-4 text-[16px] font-medium text-ink shadow-[0_14px_30px_-10px_rgb(14_58_128/0.45)] transition-transform active:scale-[0.97]">
+      <a href="#demo" class="btn btn-light rounded-full bg-white px-8 py-4 text-[16px] font-medium text-ink">
         {t.hero.primary}
       </a>
-      <a href="#pricing" class="glass-dark rounded-full px-8 py-4 text-[16px] font-medium text-white transition-transform active:scale-[0.97]">
+      <a href="#pricing" class="btn btn-glass glass-dark rounded-full px-8 py-4 text-[16px] font-medium text-white">
         {t.hero.secondary}
       </a>
     </div>
@@ -41,12 +41,12 @@ const { t } = Astro.props;
   <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[180px] bg-gradient-to-b from-white/0 via-white/70 to-white lg:h-[260px]"></div>
 
   <!-- Desktop composition (design: 1440 x 1240 frame, window at y630) -->
-  <div class="relative mx-auto mt-[73px] hidden h-[610px] w-[1120px] lg:block" role="img" aria-label={t.hero.productLabel}>
+  <div class="relative mx-auto mt-[73px] hidden h-[610px] w-[1120px] select-none lg:block" role="img" aria-label={t.hero.productLabel}>
     <div aria-hidden="true">
-      <Cloud name="far-l" x={-791} y={-257} />
-      <Cloud name="far-r" x={324} y={-296} />
-      <Cloud name="bank-l" x={-930} y={-58} />
-      <Cloud name="bank-r" x={11} y={-25} />
+      <Cloud name="far-l" x={-791} y={-257} parallax={140} />
+      <Cloud name="far-r" x={324} y={-296} parallax={140} />
+      <Cloud name="bank-l" x={-930} y={-58} parallax={70} />
+      <Cloud name="bank-r" x={11} y={-25} parallax={70} />
       <div class="relative" data-hero-window><AppWindow t={t.app} /></div>
       <Cloud name="floor" x={-952} y={261} class="z-10" />
       <FloatCards t={t.floats} which="call" class="float absolute -top-[90px] -end-[90px] z-20" style="--d:0s" />
@@ -57,7 +57,7 @@ const { t } = Astro.props;
   </div>
 
   <!-- Mobile and tablet composition: dashboard cropped to its start side, two floating cards -->
-  <div class="relative mt-10 h-[372px] lg:hidden" role="img" aria-label={t.hero.productLabel} style="--cs:0.55">
+  <div class="relative mt-10 h-[372px] select-none lg:hidden" role="img" aria-label={t.hero.productLabel} style="--cs:0.55">
     <div aria-hidden="true">
       <Cloud name="far-l" x={-300} y={-30} />
       <Cloud name="far-r" x={60} y={-60} />

@@ -25,7 +25,7 @@ for (let i = 1; i < ext.length - 2; i++) {
 }
 const cardPos = ["xl:top-[128px] xl:start-[52px]", "xl:top-[277px] xl:start-[430px]", "xl:top-[426px] xl:start-[808px]"];
 const card = "relative flex w-full flex-col rounded-[24px] border border-white bg-white/94 p-[22px] shadow-[0_18px_44px_-14px_rgb(15_58_122/0.16)] backdrop-blur-xl xl:absolute xl:min-h-[392px] xl:w-[340px]";
-const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
+const panel = "select-none mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
 ---
 
 <section id="how-it-works" class="scroll-mt-6 px-5 pb-[120px] lg:pb-[220px]">
@@ -35,6 +35,7 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
   </div>
 
   <ol
+    data-how-stage
     class="relative mx-auto mt-7 flex max-w-[420px] flex-col items-center overflow-hidden rounded-[32px] px-4 pt-7 pb-8 lg:mt-16 xl:block xl:h-[860px] xl:max-w-[1200px] xl:rounded-[40px] xl:p-0"
     style="background: var(--sky-stage)"
   >
@@ -47,8 +48,14 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
     <!-- Desktop flight path: drawn in right-to-left design space, mirrored for English. -->
     <li aria-hidden="true" class="pointer-events-none absolute inset-0 hidden xl:block">
       <svg viewBox="0 0 1200 860" class="h-full w-full ltr:-scale-x-100" fill="none">
-        <path d={d} stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0.01 11" data-flight-path />
-        <circle cx="104" cy={tops[2] - 30} r="7" fill="#f0a830" stroke="white" stroke-width="3" />
+        <defs>
+          <!-- The dotted path is revealed by a solid line that "draws" with scroll progress (--p). -->
+          <mask id="how-path-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="860">
+            <path d={d} pathLength="1" stroke="white" stroke-width="14" stroke-linecap="round" stroke-dasharray="1" class="how-draw" />
+          </mask>
+        </defs>
+        <path d={d} stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0.01 11" mask="url(#how-path-reveal)" />
+        <circle cx="104" cy={tops[2] - 30} r="7" fill="#f0a830" stroke="white" stroke-width="3" class="how-card how-landing" style="--k:0.9" />
       </svg>
       <span class="logo-mark absolute top-[50px] start-[48px] h-[39px] w-[44px] text-white"></span>
     </li>
@@ -59,7 +66,7 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
       <span class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95"></span>
     </li>
 
-    <li class:list={[card, cardPos[0]]}>
+    <li class:list={[card, cardPos[0], "how-card"]} style="--k:0.1" data-how-card>
       <div class="flex items-center justify-between">
         <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 1</span>
         <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span></span>
@@ -86,7 +93,7 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
 
     <li aria-hidden="true" class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95 xl:hidden"></li>
 
-    <li class:list={[card, cardPos[1]]}>
+    <li class:list={[card, cardPos[1], "how-card"]} style="--k:0.44" data-how-card>
       <div class="flex items-center justify-between">
         <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 2</span>
         <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span></span>
@@ -112,7 +119,7 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
 
     <li aria-hidden="true" class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95 xl:hidden"></li>
 
-    <li class:list={[card, cardPos[2]]}>
+    <li class:list={[card, cardPos[2], "how-card"]} style="--k:0.76" data-how-card>
       <div class="flex items-center justify-between">
         <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 3</span>
         <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span></span>
@@ -144,3 +151,50 @@ const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
     </li>
   </ol>
 </section>
+
+<style>
+  /* Scroll story (wide screens): --p goes 0 to 1 while the stage scrolls by; the path draws and each card
+     lifts in when the line reaches it (--k). Everywhere else --p stays 1, so the stage is simply complete. */
+  [data-how-stage] {
+    --p: 1;
+  }
+  @media (min-width: 80rem) and (prefers-reduced-motion: no-preference) {
+    :global(html.js) [data-how-stage] {
+      --p: 0;
+    }
+    .how-card {
+      --t: clamp(0, calc((var(--p) - var(--k)) / 0.12), 1);
+      opacity: var(--t);
+      translate: 0 calc((1 - var(--t)) * 32px);
+    }
+    .how-landing {
+      translate: none;
+      scale: var(--t);
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+  }
+  .how-draw {
+    stroke-dashoffset: calc(1 - var(--p));
+  }
+</style>
+
+<script>
+  import { animate, inView, scroll, stagger } from "motion";
+  import { ease, reducedMotion } from "../../scripts/motion";
+
+  const stage = document.querySelector<HTMLElement>("[data-how-stage]");
+  if (stage && !reducedMotion()) {
+    if (window.matchMedia("(min-width: 80rem)").matches) {
+      // From the stage top at 60% of the viewport to its bottom at 70%: step 3 lands while it is well in view.
+      scroll((p: number) => stage.style.setProperty("--p", p.toFixed(4)), { target: stage, offset: ["start 0.6", "end 0.7"] });
+    } else {
+      // Stacked layout: the cards rise in one after another as the stage comes into view.
+      const cards = Array.from(stage.querySelectorAll<HTMLElement>("[data-how-card]"));
+      cards.forEach((c) => (c.style.opacity = "0"));
+      cards.forEach((c) =>
+        inView(c, () => void animate(c, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, ease: ease.out }), { amount: 0.3 }),
+      );
+    }
+  }
+</script>

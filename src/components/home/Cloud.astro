@@ -14,9 +14,10 @@ interface Props {
   x: number;
   y: number;
   flip?: boolean;
+  parallax?: number;
   class?: string;
 }
-const { name, x, y, flip = false, class: cls } = Astro.props;
+const { name, x, y, flip = false, parallax, class: cls } = Astro.props;
 const s = sizes[name];
 const style = [
   `width: calc(${s.w}px * var(--cs, 1))`,
@@ -35,4 +36,5 @@ const style = [
   decoding="async"
   class:list={["pointer-events-none absolute max-w-none select-none", cls]}
   style={style}
+  data-parallax={parallax}
 />

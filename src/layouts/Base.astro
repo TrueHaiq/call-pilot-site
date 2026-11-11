@@ -32,9 +32,11 @@ const path = stripLocale(Astro.url.pathname).replace(/^\//, "");
   <body class="min-h-dvh">
     <slot />
     <script>
-      import { initReveals, initSmoothScroll } from "../scripts/motion";
+      import { initParallax, initReveals, initSequences, initSmoothScroll } from "../scripts/motion";
       initSmoothScroll();
       initReveals();
+      initSequences();
+      initParallax();
     </script>
   </body>
 </html>

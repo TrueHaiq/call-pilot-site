@@ -79,6 +79,13 @@
     border-radius: 6px;
   }
 
+  /* No grey flash when tapping links and buttons on touch screens. */
+  a,
+  button,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   ::selection {
     background: var(--color-accent);
     color: var(--color-accent-ink);
@@ -182,4 +189,55 @@ html.lenis body {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* ---------- Buttons: calm lift, soft sheen, gentle press ---------- */
+@layer components {
+  .btn {
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out),
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+    transition-duration: 120ms;
+  }
+  /* A soft band of light that passes across the button once per hover. */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+  .btn-light {
+    box-shadow: 0 14px 30px -12px rgb(14 58 128 / 0.42);
+  }
+  .btn-ink::after {
+    background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.16) 50%, transparent 70%);
+  }
+
+  /* Hover: only the sheen passes across; no lift, no shadow change. */
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover::after {
+      transform: translateX(120%);
+      transition: transform 700ms var(--ease-out);
+    }
+  }
+}
+
+/* ---------- Section motion start states (JS only, full motion only) ---------- */
+/* Hidden only once the motion script has started (it adds .motion-ready), so a failed script never hides content. */
+html.motion-ready [data-seq] {
+  opacity: 0;
 }

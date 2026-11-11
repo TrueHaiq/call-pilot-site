@@ -9,9 +9,9 @@ interface Props {
 const { t } = Astro.props;
 ---
 
-<div class="relative overflow-hidden" style="background: var(--sky-footer)">
+<div class="relative overflow-hidden" style="background: var(--sky-footer)" data-parallax-root>
   <!-- Cloud ceiling: the page climbs through the clouds into the sky -->
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 h-[520px] [--cs:0.75] lg:[--cs:1]" style="mask-image: linear-gradient(to bottom, transparent 0, black 160px); -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 160px)">
+  <div aria-hidden="true" data-parallax="80" data-parallax-range="enter" class="pointer-events-none absolute inset-x-0 top-0 h-[520px] [--cs:0.75] lg:[--cs:1]" style="mask-image: linear-gradient(to bottom, transparent 0, black 160px); -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 160px)">
     <Cloud name="floor" x={-1004} y={-170} flip />
     <Cloud name="bank-l" x={-1140} y={-10} class="opacity-85" />
     <Cloud name="bank-r" x={260} y={-40} class="opacity-85" />
@@ -23,10 +23,10 @@ const { t } = Astro.props;
     </h2>
     <p class="mt-4 max-w-[310px] text-[16px] leading-[1.56] text-white/90 sm:max-w-none lg:mt-6 lg:text-[20px]">{t.final.sub}</p>
     <div class="mt-6 flex w-full max-w-[335px] flex-col gap-2.5 sm:w-auto sm:max-w-none sm:flex-row lg:mt-8 lg:gap-3">
-      <a href="#demo" class="rounded-full bg-white px-[30px] py-4 text-[16px] font-medium text-ink shadow-[0_14px_30px_-8px_rgb(14_58_128/0.3)] transition-transform active:scale-[0.97] lg:text-[17px]">
+      <a href="#demo" class="btn btn-light rounded-full bg-white px-[30px] py-4 text-[16px] font-medium text-ink lg:text-[17px]">
         {t.final.primary}
       </a>
-      <a href="#pricing" class="glass-dark rounded-full px-[28px] py-4 text-[16px] font-medium text-white transition-transform active:scale-[0.97] lg:text-[17px]">
+      <a href="#pricing" class="btn btn-glass glass-dark rounded-full px-[28px] py-4 text-[16px] font-medium text-white lg:text-[17px]">
         {t.final.secondary}
       </a>
     </div>
@@ -55,6 +55,7 @@ const { t } = Astro.props;
   <p
     aria-hidden="true"
     dir="ltr"
+    data-reveal
     class="relative mt-6 -mb-[0.24em] text-center font-wordmark text-[17.5vw] leading-[0.8] font-black tracking-[-0.015em] text-transparent select-none lg:mt-10 lg:text-[262px]"
     style="background: linear-gradient(180deg, rgb(255 255 255 / 0.32), rgb(255 255 255 / 0.02)); -webkit-background-clip: text; background-clip: text;"
   >CALLPILOT</p>

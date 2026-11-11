@@ -16,7 +16,7 @@ const { t } = Astro.props;
     <p class="mx-auto mt-4 hidden max-w-[820px] text-[20px] text-balance text-ink-muted lg:block" data-reveal>{t.sub}</p>
   </div>
 
-  <div class="mx-auto mt-6 flex max-w-[420px] gap-0 rounded-full bg-[#eef2f7] p-1 lg:hidden" role="group" aria-label={t.switcher} data-plan-switch>
+  <div class="mx-auto mt-6 flex max-w-[420px] gap-0 rounded-full bg-[#eef2f7] p-1 select-none lg:hidden" role="group" aria-label={t.switcher} data-plan-switch>
     {t.plans.map((p) => (
       <button
         type="button"
@@ -29,7 +29,7 @@ const { t } = Astro.props;
     ))}
   </div>
 
-  <div class="mx-auto mt-4 grid max-w-[420px] gap-6 lg:mt-16 lg:max-w-[1088px] lg:grid-cols-3 lg:items-stretch">
+  <div data-reveal-stagger="0.08" class="mx-auto mt-4 grid max-w-[420px] gap-6 lg:mt-16 lg:max-w-[1088px] lg:grid-cols-3 lg:items-stretch">
     {t.plans.map((p) => (
       <article
         id={`plan-${p.id}`}
@@ -58,8 +58,8 @@ const { t } = Astro.props;
         <a
           href="#demo"
           class:list={[
-            "mt-5 block rounded-full py-3.5 text-center text-[16px] font-medium transition-transform active:scale-[0.97] lg:mt-6",
-            p.highlight ? "bg-white text-ink" : "bg-ink text-white",
+            "btn mt-5 block rounded-full py-3.5 text-center text-[16px] font-medium lg:mt-6",
+            p.highlight ? "btn-light bg-white text-ink" : "btn-ink bg-ink text-white",
           ]}
         >{p.cta}</a>
 
@@ -92,12 +92,18 @@ const { t } = Astro.props;
 </style>
 
 <script>
+  import { animate } from "motion";
+  import { ease, reducedMotion } from "../../scripts/motion";
   const switcher = document.querySelector("[data-plan-switch]");
   switcher?.addEventListener("click", (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-plan-target]");
     if (!btn) return;
     const id = btn.dataset.planTarget;
     switcher.querySelectorAll("[data-plan-target]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-    document.querySelectorAll<HTMLElement>("[data-plan]").forEach((card) => card.toggleAttribute("data-active", card.dataset.plan === id));
+    document.querySelectorAll<HTMLElement>("[data-plan]").forEach((card) => {
+      const active = card.dataset.plan === id;
+      card.toggleAttribute("data-active", active);
+      if (active) animate(card, { opacity: [0, 1], y: [8, 0] }, { duration: reducedMotion() ? 0.15 : 0.32, ease: ease.out });
+    });
   });
 </script>

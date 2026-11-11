@@ -13,23 +13,71 @@ const { t } = Astro.props;
     <div class="flex flex-col items-center text-center lg:w-[400px] lg:shrink-0 lg:items-start lg:text-start">
       <h2 class="text-[32px] leading-[1.25] font-semibold tracking-[-0.018em] text-ink lg:text-[56px]" data-reveal>{t.title}</h2>
       <p class="mt-3 max-w-[300px] text-[16px] leading-[1.56] text-ink-muted lg:mt-[18px] lg:max-w-[380px] lg:text-[18px]">{t.sub}</p>
-      <a href="#demo" class="mt-7 hidden rounded-full bg-ink px-[26px] py-3.5 text-[16px] font-medium text-white transition-transform active:scale-[0.97] lg:inline-block">{t.cta}</a>
+      <a href="#demo" class="btn btn-ink mt-7 hidden rounded-full bg-ink px-[26px] py-3.5 text-[16px] font-medium text-white lg:inline-block">{t.cta}</a>
     </div>
 
     <div class="flex flex-col gap-3 lg:w-[720px]">
       {t.items.map((item, i) => (
-        <details class="group rounded-[22px] border border-line bg-white px-5 open:bg-[#f3f7fc] lg:px-7" open={i === 0}>
+        <details name="faq" data-faq class="group select-none rounded-[22px] border border-line bg-white px-5 open:bg-[#f3f7fc] lg:px-7" open={i === 0}>
           <summary class="flex cursor-pointer list-none items-center gap-4 py-[18px] lg:py-[22px] [&::-webkit-details-marker]:hidden">
             <span class="flex-1 text-[17px] font-medium text-ink lg:text-[19px]">{item.q}</span>
-            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-[#eef2f7] text-ink transition-colors group-open:bg-ink group-open:text-white">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-[#eef2f7] text-ink transition-[background-color,color,rotate] duration-300 group-open:rotate-180 group-open:bg-ink group-open:text-white">
               <Icon name="plus" size={16} class="group-open:hidden" />
               <Icon name="minus" size={16} class="hidden group-open:block" />
             </span>
           </summary>
-          <p class="max-w-[600px] pb-[22px] text-[15px] leading-[1.65] text-ink-muted lg:text-[16px]">{item.a}</p>
+          <div data-faq-body class="overflow-hidden">
+            <p class="max-w-[600px] pb-[22px] text-[15px] leading-[1.65] text-ink-muted lg:text-[16px]">{item.a}</p>
+          </div>
         </details>
       ))}
-      <a href="#demo" class="mt-1 block rounded-full bg-ink py-[15px] text-center text-[16px] font-medium text-white lg:hidden">{t.cta}</a>
+      <a href="#demo" class="btn btn-ink mt-1 block rounded-full bg-ink py-[15px] text-center text-[16px] font-medium text-white lg:hidden">{t.cta}</a>
     </div>
   </div>
 </section>
+
+<script>
+  import { animate } from "motion";
+  import { ease, reducedMotion } from "../../scripts/motion";
+
+  // Smooth, one-at-a-time accordion that works in every browser (Safari has no animatable <details>).
+  // Without JS the native <details name> still keeps one answer open.
+  const items = Array.from(document.querySelectorAll<HTMLDetailsElement>("details[data-faq]"));
+  const busy = new WeakSet<HTMLDetailsElement>();
+  const duration = reducedMotion() ? 0 : 0.36;
+
+  const body = (d: HTMLDetailsElement) => d.querySelector<HTMLElement>("[data-faq-body]")!;
+
+  function close(d: HTMLDetailsElement) {
+    if (!d.open || busy.has(d)) return;
+    busy.add(d);
+    const el = body(d);
+    animate(el, { height: [el.offsetHeight, 0], opacity: [1, 0] }, { duration, ease: ease.out }).then(() => {
+      d.open = false;
+      el.style.height = el.style.opacity = "";
+      busy.delete(d);
+    });
+  }
+
+  function open(d: HTMLDetailsElement) {
+    if (busy.has(d)) return;
+    busy.add(d);
+    d.open = true;
+    const el = body(d);
+    const h = el.scrollHeight;
+    animate(el, { height: [0, h], opacity: [0, 1] }, { duration, ease: ease.out }).then(() => {
+      el.style.height = el.style.opacity = "";
+      busy.delete(d);
+    });
+  }
+
+  items.forEach((d) => {
+    d.removeAttribute("name"); // exclusivity is handled here, with animation
+    d.querySelector("summary")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (d.open) return close(d);
+      items.forEach((o) => o !== d && close(o));
+      open(d);
+    });
+  });
+</script>

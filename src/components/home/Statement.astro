@@ -45,7 +45,7 @@ const plain = t.statement.parts.filter((p): p is string => typeof p === "string"
     ))}
   </div>
   <p
-    class="statement mx-auto max-w-[1120px] text-center text-[26px] leading-[1.42] font-medium tracking-[-0.015em] text-ink lg:text-[52px] lg:leading-[82px] lg:tracking-[-0.8px]"
+    class="statement mx-auto select-none max-w-[1120px] text-center text-[26px] leading-[1.42] font-medium tracking-[-0.015em] text-ink lg:text-[52px] lg:leading-[82px] lg:tracking-[-0.8px]"
     style={`--n:${n}`}
     aria-label={plain}
     data-statement
@@ -59,7 +59,7 @@ const plain = t.statement.parts.filter((p): p is string => typeof p === "string"
   <div class="mx-auto flex max-w-[1100px] flex-col items-center gap-5 text-center lg:gap-7">
     <p class="px-5 text-[14px] text-ink-muted lg:text-[16px]">{t.works.label}</p>
     <!-- Marquee: two identical runs scroll as one loop; edges fade out; pauses on hover. -->
-    <div class="marquee group w-full overflow-hidden" dir="ltr">
+    <div class="marquee group w-full overflow-hidden select-none" dir="ltr">
       <div class="marquee-track flex w-max group-hover:[animation-play-state:paused]">
         {[0, 1].map((copy) => (
           <ul class="flex shrink-0 items-center gap-12 pe-12 lg:gap-20 lg:pe-20" aria-hidden={copy === 1 ? "true" : undefined}>
