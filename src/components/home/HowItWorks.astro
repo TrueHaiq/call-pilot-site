@@ -1,0 +1,146 @@
+---
+import type { HomeContent } from "../../i18n/home";
+import Icon from "./Icon.astro";
+import Cloud from "./Cloud.astro";
+
+interface Props {
+  t: HomeContent["how"];
+}
+const { t } = Astro.props;
+const s = t.steps;
+
+// Desktop stage geometry (Figma "How it works" stage, 1200 x 860, reading right to left).
+const tops = [128, 277, 426];
+const P: [number, number][] = [
+  [1098, 73.5], [960, tops[0] - 30], [789, tops[1] - 74], [600, tops[1] - 30], [411, tops[2] - 74], [230, tops[2] - 30], [104, tops[2] - 30],
+];
+// Catmull-Rom through the waypoints gives one smooth curve with no corners.
+const ext = [P[0], ...P, P[P.length - 1]];
+let d = `M ${P[0][0]} ${P[0][1]}`;
+for (let i = 1; i < ext.length - 2; i++) {
+  const [p0, p1, p2, p3] = [ext[i - 1], ext[i], ext[i + 1], ext[i + 2]];
+  const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+  const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+  d += ` C ${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`;
+}
+const cardPos = ["xl:top-[128px] xl:start-[52px]", "xl:top-[277px] xl:start-[430px]", "xl:top-[426px] xl:start-[808px]"];
+const card = "relative flex w-full flex-col rounded-[24px] border border-white bg-white/94 p-[22px] shadow-[0_18px_44px_-14px_rgb(15_58_122/0.16)] backdrop-blur-xl xl:absolute xl:min-h-[392px] xl:w-[340px]";
+const panel = "mt-[18px] flex flex-1 flex-col rounded-[16px] bg-panel p-4";
+---
+
+<section class="px-5 pb-[96px] lg:pb-40">
+  <div class="mx-auto max-w-[900px] text-center">
+    <h2 class="text-[32px] leading-[1.25] font-semibold tracking-[-0.018em] text-ink lg:text-[56px]" data-reveal>{t.title}</h2>
+    <p class="mx-auto mt-3 max-w-[320px] text-[16px] leading-[1.56] text-balance text-ink-muted sm:max-w-none lg:text-[20px]" data-reveal>{t.sub}</p>
+  </div>
+
+  <ol
+    class="relative mx-auto mt-7 flex max-w-[420px] flex-col items-center overflow-hidden rounded-[32px] px-4 pt-7 pb-8 lg:mt-16 xl:block xl:h-[860px] xl:max-w-[1200px] xl:rounded-[40px] xl:p-0"
+    style="background: var(--sky-stage)"
+  >
+    <li aria-hidden="true" class="pointer-events-none absolute -top-[200px] h-[700px] w-[900px] ltr:-right-[260px] rtl:-left-[260px] xl:-top-[360px]" style="background: radial-gradient(closest-side, rgb(255 247 230 / 0.55), rgb(255 235 205 / 0.15) 40%, transparent)"></li>
+    <li aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-full" style="--cs:0.9">
+      <Cloud name="floor" x={-834} y={680} class="hidden xl:block" />
+      <Cloud name="far-r" x={40} y={110} class="hidden opacity-70 xl:block" />
+    </li>
+
+    <!-- Desktop flight path: drawn in right-to-left design space, mirrored for English. -->
+    <li aria-hidden="true" class="pointer-events-none absolute inset-0 hidden xl:block">
+      <svg viewBox="0 0 1200 860" class="h-full w-full ltr:-scale-x-100" fill="none">
+        <path d={d} stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0.01 11" data-flight-path />
+        <circle cx="104" cy={tops[2] - 30} r="7" fill="#f0a830" stroke="white" stroke-width="3" />
+      </svg>
+      <span class="logo-mark absolute top-[50px] start-[48px] h-[39px] w-[44px] text-white"></span>
+    </li>
+
+    <!-- Mobile/tablet: logo and dotted links between stacked cards -->
+    <li aria-hidden="true" class="flex flex-col items-center xl:hidden">
+      <span class="logo-mark h-[35px] w-10 text-white"></span>
+      <span class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95"></span>
+    </li>
+
+    <li class:list={[card, cardPos[0]]}>
+      <div class="flex items-center justify-between">
+        <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 1</span>
+        <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span></span>
+      </div>
+      <h3 class="mt-[18px] text-[22px] font-semibold tracking-[-0.01em] text-ink">{s.number.title}</h3>
+      <p class="mt-2 text-[15px] leading-[1.53] text-ink-muted">{s.number.desc}</p>
+      <div class:list={[panel, "gap-2.5"]}>
+        <div class="flex items-center justify-between text-[12px]">
+          <span class="font-medium text-ink">{s.number.pick}</span>
+          <span class="text-ink-subtle">{s.number.available}</span>
+        </div>
+        <ul class="flex flex-col gap-1">
+          {s.number.options.map((o, i) => (
+            <li class:list={["flex items-center gap-2.5 rounded-[10px] px-3 py-[9px]", i === 0 && "border border-line bg-white shadow-[0_2px_6px_rgb(15_42_85/0.06)]"]}>
+              <span class:list={["num text-[15px]", i === 0 ? "font-semibold text-ink" : "text-ink-muted"]}>{o.number}</span>
+              <span class="text-[12px] text-ink-subtle">{o.area}</span>
+              {i === 0 && <span class="ms-auto rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-800">{s.number.selected}</span>}
+            </li>
+          ))}
+        </ul>
+        <p class="text-[12px] text-ink-muted">{s.number.forward}</p>
+      </div>
+    </li>
+
+    <li aria-hidden="true" class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95 xl:hidden"></li>
+
+    <li class:list={[card, cardPos[1]]}>
+      <div class="flex items-center justify-between">
+        <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 2</span>
+        <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink/15"></span></span>
+      </div>
+      <h3 class="mt-[18px] text-[22px] font-semibold tracking-[-0.01em] text-ink">{s.build.title}</h3>
+      <p class="mt-2 text-[15px] leading-[1.53] text-ink-muted">{s.build.desc}</p>
+      <div class:list={[panel, "gap-2.5"]}>
+        <div class="flex items-center justify-between text-[12px]">
+          <span class="text-ink-subtle">{s.build.label}</span>
+          <span class="font-medium text-ink">{s.build.progress}</span>
+        </div>
+        <div class="h-1 overflow-hidden rounded-full bg-[#e1e8f2]"><div class="h-full w-3/4 rounded-full bg-sky-800"></div></div>
+        <ul>
+          {s.build.sources.map((src) => (
+            <li class="flex items-center justify-between border-b border-line py-[7px] last:border-0">
+              <span class="text-[14px] text-ink">{src.name}</span>
+              <span class:list={["text-[12px] font-medium", src.done ? "text-green" : "text-amber-ink"]}>{src.status}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </li>
+
+    <li aria-hidden="true" class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95 xl:hidden"></li>
+
+    <li class:list={[card, cardPos[2]]}>
+      <div class="flex items-center justify-between">
+        <span class="text-[13px] font-medium text-ink-subtle">{t.stepLabel} 3</span>
+        <span class="flex gap-1" aria-hidden="true"><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span><span class="h-1 w-[18px] rounded-full bg-ink"></span></span>
+      </div>
+      <h3 class="mt-[18px] text-[22px] font-semibold tracking-[-0.01em] text-ink">{s.answer.title}</h3>
+      <p class="mt-2 text-[15px] leading-[1.53] text-ink-muted">{s.answer.desc}</p>
+      <div class:list={[panel, "gap-3"]}>
+        <div class="flex items-center gap-2.5">
+          <span class="grid size-8 place-items-center rounded-full bg-amber-soft text-[12px] font-semibold text-amber-ink">{s.answer.callerInitials}</span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-[14px] font-medium text-ink">{s.answer.caller}</span>
+            <span class="block text-[12px] text-ink-subtle">{s.answer.callerMeta}</span>
+          </span>
+          <span class="flex h-[18px] items-center gap-[2.5px]" dir="ltr" aria-hidden="true">
+            {[5, 10, 16, 9, 18, 12, 7, 14, 8].map((h) => <span class="wave-bar w-[2.5px] rounded-full bg-amber" style={`height:${h}px`}></span>)}
+          </span>
+        </div>
+        <div class="rounded-[12px] border border-line bg-white px-3 py-2.5">
+          <p class="text-[11px] font-medium text-sky-800">{s.answer.agent}</p>
+          <p class="mt-0.5 text-[14px] leading-[1.5] text-ink">{s.answer.line}</p>
+        </div>
+        <p class="flex items-center gap-1.5 text-[12px] font-medium text-green"><Icon name="check" size={13} stroke={2.5} />{s.answer.saved}</p>
+      </div>
+    </li>
+
+    <li aria-hidden="true" class="flex flex-col items-center xl:hidden">
+      <span class="my-1.5 h-[34px] border-s-[3.5px] border-dotted border-white/95"></span>
+      <span class="size-3.5 rounded-full border-[3px] border-white bg-amber"></span>
+    </li>
+  </ol>
+</section>

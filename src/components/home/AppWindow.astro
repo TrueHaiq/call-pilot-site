@@ -1,0 +1,102 @@
+---
+// Static dashboard mock-up shown in the hero. Fixed 1120px design width; the hero scales it on small screens.
+import type { HomeContent } from "../../i18n/home";
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  t: HomeContent["app"];
+}
+const { t } = Astro.props;
+const bars = [16, 24, 40, 62, 86, 92, 72, 76, 100, 88, 58, 38];
+const nowIndex = 8;
+const tone = {
+  amber: { dot: "bg-amber", chip: "bg-amber-soft text-amber-ink", avatar: "bg-amber-soft text-amber-ink" },
+  blue: { dot: "bg-sky-800", chip: "bg-sky-50 text-sky-800", avatar: "bg-sky-50 text-sky-800" },
+  violet: { dot: "bg-violet", chip: "bg-sky-50 text-violet", avatar: "bg-sky-50 text-violet" },
+  green: { dot: "bg-green", chip: "bg-green-soft text-green", avatar: "bg-green-soft text-green" },
+  slate: { dot: "bg-ink-subtle", chip: "bg-panel text-ink-muted", avatar: "bg-panel text-ink-muted" },
+};
+---
+
+<div class="w-[1120px] rounded-[28px] border border-white/80 bg-white/45 p-2.5 shadow-[0_40px_80px_-30px_rgb(15_58_122/0.35)] backdrop-blur-xl">
+  <div class="flex h-[449px] overflow-hidden rounded-[20px] bg-[#f5f8fc]">
+    <aside class="flex w-[218px] shrink-0 flex-col gap-5 border-e border-line bg-white px-4 py-6">
+      <div class="px-2 text-ink"><Logo size="sm" /></div>
+      <ul class="flex flex-col gap-1 text-[14px]">
+        {t.nav.map((item, i) => (
+          <li class:list={["flex items-center gap-2.5 rounded-xl px-3 py-2.5", i === 0 ? "bg-sky-50 font-medium text-sky-800" : "text-ink-muted"]}>
+            <span class:list={["size-3.5 rounded-[4px] border-[1.5px]", i === 0 ? "border-sky-800" : "border-ink-subtle/70"]}></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </aside>
+
+    <div class="flex min-w-0 flex-1 flex-col gap-4 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[20px] font-semibold text-ink">{t.greeting}</p>
+          <p class="text-[12px] text-ink-subtle">{t.date}</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span class="flex h-9 w-[190px] items-center gap-2 rounded-full border border-line bg-white px-3.5 text-[12px] text-ink-subtle">
+            <Icon name="search" size={14} /> {t.search}
+          </span>
+          <span class="rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-white">{t.newAgent}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 gap-3">
+        {t.kpis.map((k) => (
+          <div class="rounded-[14px] border border-line bg-white px-4 py-3.5">
+            <p class="text-[12px] text-ink-muted">{k.label}</p>
+            <p class="num mt-1 text-start text-[26px] font-semibold leading-tight text-ink">{k.value}</p>
+            <p class="mt-0.5 text-[11px] text-ink-subtle">{k.meta}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="grid min-h-0 flex-1 grid-cols-2 gap-3">
+        <div class="flex flex-col rounded-[14px] border border-line bg-white px-4 py-3.5">
+          <div class="flex items-center justify-between">
+            <p class="text-[14px] font-semibold text-ink">{t.live.title}</p>
+            <span class="text-[11px] text-sky-800">{t.live.all}</span>
+          </div>
+          <ul class="mt-2 flex flex-col">
+            {t.live.rows.map((r) => (
+              <li class="flex items-center gap-3 border-b border-line py-2.5 last:border-0">
+                <span class:list={["grid size-8 place-items-center rounded-full text-[12px] font-semibold", tone[r.tone].avatar]}>{r.initial}</span>
+                <span class="min-w-0 flex-1">
+                  <span class="block text-[13px] font-medium text-ink">{r.name}</span>
+                  <span class="block text-[11px] text-ink-subtle">{r.meta}</span>
+                </span>
+                <span class:list={["flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium", tone[r.tone].chip]}>
+                  <span class:list={["size-1.5 rounded-full", tone[r.tone].dot]}></span>{r.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="flex flex-col rounded-[14px] border border-line bg-white px-4 py-3.5">
+          <div class="flex items-center justify-between">
+            <p class="text-[14px] font-semibold text-ink">{t.chart.title}</p>
+            <span class="flex items-center gap-1.5 text-[11px] text-ink-subtle"><span class="size-1.5 rounded-full bg-amber"></span>{t.chart.now}</span>
+          </div>
+          <div class="mt-3 flex flex-1 items-end gap-2" dir="ltr">
+            {bars.map((h, i) => (
+              <span
+                class:list={["flex-1 rounded-t-[6px]", i === nowIndex ? "bg-amber" : "bg-gradient-to-b from-sky-800/90 to-sky-300/40"]}
+                style={`height:${h}%`}
+              ></span>
+            ))}
+          </div>
+          <div class="mt-2 flex justify-between text-[10px] text-ink-subtle" dir="ltr">
+            {t.chart.hours.map((h) => <span class="num">{h}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

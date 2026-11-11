@@ -1,24 +1,49 @@
 @import "tailwindcss";
+@import "@fontsource-variable/rubik";
+@import "@fontsource/nunito/latin-900.css";
 
-/* Placeholder palette and fonts: replaced once the brand brief lands. */
+/* Sky direction (Figma "Hero v3"): Rubik, navy ink, sky blues, one warm amber for live states. */
 @theme {
-  --color-bg: #fafafa;
+  --color-bg: #ffffff;
   --color-surface: #ffffff;
-  --color-ink: #16181d;
-  --color-ink-muted: #5d6470;
-  --color-line: #e4e6ea;
-  --color-accent: #3b5bfd;
+  --color-tint: #f6f8fb;
+  --color-panel: #f4f7fb;
+  --color-ink: #12203a;
+  --color-ink-muted: #5a6578;
+  --color-ink-subtle: #8a93a3;
+  --color-line: #e3e9f2;
+  --color-accent: #1f6bd6;
   --color-accent-ink: #ffffff;
+  --color-sky-900: #1a52b0;
+  --color-sky-800: #1f6bd6;
+  --color-sky-600: #3f8ce8;
+  --color-sky-300: #8ec3f4;
+  --color-sky-100: #d9ecfb;
+  --color-sky-50: #eef3fa;
+  --color-amber: #f0a830;
+  --color-amber-ink: #a86a0c;
+  --color-amber-soft: #fcefd6;
+  --color-green: #16935a;
+  --color-green-soft: #e7f6ee;
+  --color-violet: #7a5af0;
+  --color-night: #12203a;
+  --color-night-2: #1e2f53;
 
-  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Rubik Variable", "Rubik", ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-sans);
+  --font-wordmark: "Nunito", "Rubik Variable", sans-serif;
 
-  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5.5rem);
-  --text-display--line-height: 1.02;
-  --text-display--letter-spacing: -0.035em;
+  --text-display: clamp(2.125rem, 1.2rem + 4.2vw, 5.25rem);
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 1.2rem + 2.2vw, 3.5rem);
+  --text-h2--line-height: 1.18;
+  --text-h2--letter-spacing: -0.02em;
 
   --container: 75rem;
   --container-wide: 90rem;
+
+  --radius-card: 2rem;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -29,7 +54,14 @@
 }
 
 :root {
-  --space-section: clamp(6rem, 4rem + 8vw, 10rem);
+  --space-section: clamp(5.5rem, 3rem + 6vw, 10rem);
+  --sky-gradient: linear-gradient(180deg, #1f6bd6 0%, #3f8ce8 28%, #8ec3f4 55%, #d9ecfb 74%, #f5f9fd 90%, #ffffff 100%);
+  --sky-card: linear-gradient(180deg, #2a72da 0%, #5c9fea 45%, #b5d7f7 80%, #e8f3fd 100%);
+  --sky-stage: linear-gradient(180deg, #2a72da 0%, #4a92e8 35%, #93c4f3 70%, #ddeefc 100%);
+  --sky-footer: linear-gradient(180deg, #ffffff 0%, #d6eafb 15%, #6ea9ee 33%, #3a85e4 50%, #2369d0 75%, #1a52b0 100%);
+  --night-card: linear-gradient(180deg, #16264a 0%, #0f1a33 100%);
+  --shadow-float: 0 24px 48px -16px rgb(15 58 122 / 0.22);
+  --shadow-soft: 0 12px 28px -8px rgb(27 58 107 / 0.1);
 }
 
 @layer base {
@@ -44,12 +76,19 @@
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 
   ::selection {
     background: var(--color-accent);
     color: var(--color-accent-ink);
+  }
+
+  /* Numbers, phone numbers and prices keep their own order inside Hebrew text. */
+  .num {
+    unicode-bidi: isolate;
+    direction: ltr;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -57,7 +96,7 @@
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: 1.5rem;
+  padding-inline: 1.25rem;
   @media (width >= 48rem) {
     padding-inline: 2rem;
   }
@@ -65,6 +104,36 @@
 
 @utility section {
   padding-block: var(--space-section);
+}
+
+/* Frosted glass on the sky. */
+@utility glass {
+  background: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-float);
+}
+
+@utility glass-dark {
+  background: rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(255 255 255 / 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Logo mark is a white PNG used as a mask so it takes the current text colour. */
+@utility logo-mark {
+  background: currentColor;
+  -webkit-mask: url("/brand/logo-mark.png") center / contain no-repeat;
+  mask: url("/brand/logo-mark.png") center / contain no-repeat;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Hidden start states only apply when JS runs, so content never disappears without it. */

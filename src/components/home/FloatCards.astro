@@ -1,0 +1,80 @@
+---
+import type { HomeContent } from "../../i18n/home";
+import Icon from "./Icon.astro";
+
+interface Props {
+  t: HomeContent["floats"];
+  which: "call" | "whatsapp" | "summary" | "crm";
+  class?: string;
+  style?: string;
+}
+const { t, which, class: cls, style } = Astro.props;
+const waves = [8, 14, 22, 12, 26, 18, 10, 20, 14, 8, 16, 10];
+---
+
+<div class:list={["glass rounded-[18px] p-4", cls]} style={style}>
+  {which === "call" && (
+    <div class="w-[248px]">
+      <div class="flex items-center gap-3">
+        <span class="grid size-[38px] place-items-center rounded-[12px] bg-amber-soft text-amber-ink"><Icon name="phone" size={18} /></span>
+        <span>
+          <span class="block text-[14px] font-semibold text-ink">{t.call.title}</span>
+          <span class="block text-[12px] text-ink-muted">{t.call.meta}</span>
+        </span>
+      </div>
+      <div class="mt-3 flex items-center justify-between">
+        <span class="flex items-center gap-1.5 rounded-full bg-amber-soft px-2.5 py-1 text-[11px] font-medium text-ink">
+          <span class="size-1.5 rounded-full bg-amber"></span>{t.call.chip}
+        </span>
+        <span class="flex h-[26px] items-center gap-[3px]" dir="ltr">
+          {waves.map((h) => <span class="wave-bar w-[3px] rounded-full bg-amber" style={`height:${h}px`}></span>)}
+        </span>
+      </div>
+    </div>
+  )}
+  {which === "whatsapp" && (
+    <div class="w-[238px]">
+      <div class="flex items-center gap-3">
+        <span class="grid size-[38px] place-items-center rounded-[12px] bg-green-soft text-green"><Icon name="chat" size={18} /></span>
+        <span>
+          <span class="block text-[14px] font-semibold text-ink">{t.whatsapp.title}</span>
+          <span class="block text-[12px] text-ink-muted">{t.whatsapp.meta}</span>
+        </span>
+      </div>
+      <p class="mt-3 rounded-[12px] bg-green-soft px-3 py-2.5 text-[12px] leading-[1.5] text-ink">{t.whatsapp.message}</p>
+    </div>
+  )}
+  {which === "summary" && (
+    <div class="w-[268px]">
+      <div class="flex items-center gap-3">
+        <span class="grid size-[38px] place-items-center rounded-[12px] bg-sky-50 text-sky-800"><Icon name="sparkle" size={18} /></span>
+        <span>
+          <span class="block text-[14px] font-semibold text-ink">{t.summary.title}</span>
+          <span class="block text-[12px] text-ink-muted">{t.summary.meta}</span>
+        </span>
+      </div>
+      <p class="mt-3 text-[12px] leading-[1.5] text-ink-muted">{t.summary.text}</p>
+      <div class="mt-2.5 flex gap-1.5">
+        {t.summary.tags.map((tag) => <span class="rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-medium text-sky-800">{tag}</span>)}
+      </div>
+    </div>
+  )}
+  {which === "crm" && (
+    <div class="w-[228px]">
+      <div class="flex items-center gap-3">
+        <span class="grid size-[38px] place-items-center rounded-[12px] bg-ink text-white"><Icon name="database" size={17} /></span>
+        <span>
+          <span class="block text-[14px] font-semibold text-ink">{t.crm.title}</span>
+          <span class="block text-[12px] text-ink-muted">{t.crm.meta}</span>
+        </span>
+      </div>
+      <div class="mt-3 flex gap-1.5">
+        {t.crm.fields.map((f) => (
+          <span class="flex items-center gap-1 rounded-full bg-green-soft px-2.5 py-1 text-[11px] font-medium text-green">
+            <Icon name="check" size={11} stroke={3} />{f}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>

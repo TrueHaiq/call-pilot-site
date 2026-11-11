@@ -1,0 +1,96 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { locales, type Locale } from "../../i18n/ui";
+import type { HomeContent } from "../../i18n/home";
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  t: HomeContent["nav"];
+  locale: Locale;
+}
+const { t, locale } = Astro.props;
+const other: Locale = locale === "he" ? "en" : "he";
+const otherLabel = other === "en" ? "EN" : "עב";
+const dir = locales[locale].dir;
+---
+
+<header class="absolute inset-x-0 top-0 z-40 px-3 pt-3 lg:px-0 lg:pt-7">
+  <!-- The bar keeps the logo on the left in both languages (as in the design); text groups keep their own direction. -->
+  <nav
+    aria-label={t.label}
+    dir="ltr"
+    class="glass-dark relative mx-auto flex h-[60px] max-w-[1120px] items-center justify-between rounded-full ps-4 pe-2 text-white lg:h-16 lg:ps-6 lg:pe-2.5"
+  >
+    <a href={getRelativeLocaleUrl(locale, "")} aria-label={t.home} class="rounded-full">
+      <Logo size="md" class="max-lg:scale-[0.85] max-lg:origin-left" />
+    </a>
+
+    <ul dir={dir} class="hidden items-center gap-10 text-[15px] lg:flex">
+      {t.links.map((l) => (
+        <li><a href={l.href} class="rounded-md opacity-90 transition-opacity hover:opacity-100">{l.label}</a></li>
+      ))}
+    </ul>
+
+    <div class="hidden items-center gap-5 lg:flex">
+      <a href={getRelativeLocaleUrl(other, "")} hreflang={locales[other].hreflang} lang={other} class="rounded-md text-[13px] font-medium opacity-90 hover:opacity-100">
+        {otherLabel}
+      </a>
+      <a href="#demo" dir={dir} class="rounded-full bg-white px-5 py-2.5 text-[15px] font-medium text-ink shadow-[0_8px_20px_-8px_rgb(14_58_128/0.4)] transition-transform active:scale-[0.97]">
+        {t.cta}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="grid size-11 place-items-center rounded-full bg-white text-ink lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span class="sr-only" data-menu-label data-open={t.close} data-closed={t.menu}>{t.menu}</span>
+      <Icon name="menu" size={20} />
+    </button>
+
+    <div
+      id="mobile-menu"
+      dir={dir}
+      hidden
+      class="glass absolute inset-x-0 top-[calc(100%+8px)] rounded-[24px] p-3 text-ink lg:hidden"
+    >
+      <ul class="flex flex-col">
+        {t.links.map((l) => (
+          <li><a href={l.href} class="block rounded-xl px-4 py-3 text-[17px] hover:bg-sky-50">{l.label}</a></li>
+        ))}
+        <li>
+          <a href={getRelativeLocaleUrl(other, "")} hreflang={locales[other].hreflang} lang={other} class="block rounded-xl px-4 py-3 text-[17px] text-ink-muted hover:bg-sky-50">
+            {locales[other].label}
+          </a>
+        </li>
+      </ul>
+      <a href="#demo" class="mt-2 block rounded-full bg-ink py-3.5 text-center text-[16px] font-medium text-white">{t.cta}</a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.getElementById("mobile-menu");
+  const label = toggle?.querySelector<HTMLElement>("[data-menu-label]");
+  const set = (open: boolean) => {
+    if (!toggle || !menu || !label) return;
+    toggle.setAttribute("aria-expanded", String(open));
+    menu.hidden = !open;
+    label.textContent = (open ? label.dataset.open : label.dataset.closed) ?? "";
+  };
+  toggle?.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
+  menu?.addEventListener("click", (e) => {
+    if ((e.target as HTMLElement).closest("a")) set(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+      set(false);
+      toggle.focus();
+    }
+  });
+</script>

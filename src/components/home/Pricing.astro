@@ -1,0 +1,103 @@
+---
+// Three plans side by side on desktop; on small screens a switcher shows one plan at a time.
+import type { HomeContent } from "../../i18n/home";
+import Icon from "./Icon.astro";
+
+interface Props {
+  t: HomeContent["pricing"];
+}
+const { t } = Astro.props;
+---
+
+<section id="pricing" class="px-5 pb-[88px] lg:pb-40">
+  <div class="mx-auto max-w-[900px] text-center">
+    <h2 class="text-[28px] leading-[1.28] font-semibold tracking-[-0.018em] text-ink lg:text-[56px]" data-reveal>{t.title}</h2>
+    <p class="mt-2 text-[15px] text-ink-muted lg:hidden">{t.subShort}</p>
+    <p class="mx-auto mt-4 hidden max-w-[820px] text-[20px] text-balance text-ink-muted lg:block" data-reveal>{t.sub}</p>
+  </div>
+
+  <div class="mx-auto mt-6 flex max-w-[420px] gap-0 rounded-full bg-[#eef2f7] p-1 lg:hidden" role="group" aria-label={t.switcher} data-plan-switch>
+    {t.plans.map((p) => (
+      <button
+        type="button"
+        class="flex-1 rounded-full py-2.5 text-[14px] text-ink-muted transition-colors aria-pressed:bg-white aria-pressed:font-semibold aria-pressed:text-ink aria-pressed:shadow-[0_1px_4px_rgb(15_42_85/0.1)]"
+        aria-pressed={p.highlight ? "true" : "false"}
+        data-plan-target={p.id}
+      >
+        {p.name}
+      </button>
+    ))}
+  </div>
+
+  <div class="mx-auto mt-4 grid max-w-[420px] gap-6 lg:mt-16 lg:max-w-[1088px] lg:grid-cols-3 lg:items-stretch">
+    {t.plans.map((p) => (
+      <article
+        id={`plan-${p.id}`}
+        data-plan={p.id}
+        data-active={p.highlight ? "" : undefined}
+        class:list={[
+          "flex flex-col rounded-[24px] p-6 lg:rounded-[32px] lg:p-9",
+          p.highlight ? "text-white shadow-[0_30px_60px_-16px_rgb(27_79_153/0.28)]" : "border border-line bg-white text-ink",
+        ]}
+        style={p.highlight ? "background: linear-gradient(180deg,#1f6bd6 0%,#3f8ce8 55%,#7db7f2 100%)" : undefined}
+      >
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-[22px] font-semibold lg:text-[24px]">{p.name}</h3>
+          {p.highlight && <span class="glass-dark rounded-full px-2.5 py-1 text-[12px] font-medium">{t.recommended}</span>}
+        </div>
+        <p class:list={["mt-2 text-[14px] leading-[1.55] lg:mt-6 lg:text-[15px]", p.highlight ? "text-[#dcebfc]" : "text-ink-muted"]}>{p.desc}</p>
+
+        <div class="mt-5 lg:mt-6">
+          <p class="flex items-baseline gap-2">
+            <span class:list={["text-[40px] leading-none font-semibold tracking-[-0.02em] lg:text-[48px]", /\d/.test(p.price) && "num"]}>{p.price}</span>
+            {/\d/.test(p.price) && <span class:list={["text-[14px] lg:text-[15px]", p.highlight ? "text-[#dcebfc]" : "text-ink-muted"]}>{t.perUser}</span>}
+          </p>
+          <p class:list={["mt-2 text-[13px] lg:text-[14px]", p.highlight ? "text-[#dcebfc]" : "text-ink-muted"]}>{p.usage}</p>
+        </div>
+
+        <a
+          href="#demo"
+          class:list={[
+            "mt-5 block rounded-full py-3.5 text-center text-[16px] font-medium transition-transform active:scale-[0.97] lg:mt-6",
+            p.highlight ? "bg-white text-ink" : "bg-ink text-white",
+          ]}
+        >{p.cta}</a>
+
+        <hr class:list={["my-5 lg:my-6", p.highlight ? "border-white/30" : "border-line"]} />
+        {p.intro && <p class="mb-3.5 text-[13px] font-medium lg:text-[14px]">{p.intro}</p>}
+        <ul class="flex flex-col gap-3">
+          {p.features.map((f) => (
+            <li class="flex items-center gap-2.5 text-[14px] lg:text-[15px]">
+              <span class:list={["grid size-5 shrink-0 place-items-center rounded-full", p.highlight ? "bg-white text-sky-800" : "bg-green-soft text-green"]}>
+                <Icon name="check" size={12} stroke={3} />
+              </span>
+              {f}
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+
+  <p class="mx-auto mt-6 max-w-[300px] text-center text-[13px] leading-[1.6] text-ink-muted lg:hidden">{t.noteShort}</p>
+  <p class="mx-auto mt-10 hidden max-w-[760px] text-center text-[15px] leading-[1.6] text-ink-muted lg:block">{t.note}</p>
+</section>
+
+<style>
+  @media (width < 64rem) {
+    [data-plan]:not([data-active]) {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const switcher = document.querySelector("[data-plan-switch]");
+  switcher?.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-plan-target]");
+    if (!btn) return;
+    const id = btn.dataset.planTarget;
+    switcher.querySelectorAll("[data-plan-target]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    document.querySelectorAll<HTMLElement>("[data-plan]").forEach((card) => card.toggleAttribute("data-active", card.dataset.plan === id));
+  });
+</script>

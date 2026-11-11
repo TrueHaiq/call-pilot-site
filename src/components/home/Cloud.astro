@@ -1,0 +1,38 @@
+---
+// One cloud from the Figma sky, placed in "design pixels" relative to an anchor:
+// x is measured from the anchor's horizontal centre, y from its top. --cs scales the whole layer.
+const sizes = {
+  "far-l": { w: 568, h: 290, pad: 68 },
+  "far-r": { w: 665, h: 293, pad: 68 },
+  "bank-l": { w: 1160, h: 589, pad: 102 },
+  "bank-r": { w: 1157, h: 526, pad: 106 },
+  floor: { w: 2110, h: 665, pad: 129 },
+} as const;
+
+interface Props {
+  name: keyof typeof sizes;
+  x: number;
+  y: number;
+  flip?: boolean;
+  class?: string;
+}
+const { name, x, y, flip = false, class: cls } = Astro.props;
+const s = sizes[name];
+const style = [
+  `width: calc(${s.w}px * var(--cs, 1))`,
+  `left: calc(50% + ${x - s.pad}px * var(--cs, 1))`,
+  `top: calc(${y - s.pad}px * var(--cs, 1))`,
+  flip ? "transform: rotate(180deg)" : "",
+].join(";");
+---
+
+<img
+  src={`/clouds/${name}.svg`}
+  width={s.w}
+  height={s.h}
+  alt=""
+  aria-hidden="true"
+  decoding="async"
+  class:list={["pointer-events-none absolute max-w-none select-none", cls]}
+  style={style}
+/>
