@@ -25,7 +25,8 @@ const reveal = () =>
 
 export function initSmoothScroll() {
   if (reducedMotion()) return null;
-  return new Lenis({ autoRaf: true, lerp: 0.1, anchors: { offset: -96 } });
+  // Anchor offset comes from CSS scroll-margin-top (Lenis respects it), so it is defined once.
+  return new Lenis({ autoRaf: true, lerp: 0.1, anchors: true });
 }
 
 export function initReveals(root: ParentNode = document) {

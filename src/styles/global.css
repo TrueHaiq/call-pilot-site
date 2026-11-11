@@ -111,7 +111,7 @@
 
 /* Anchor jumps land below the pinned nav. */
 section[id] {
-  scroll-margin-top: 96px;
+  scroll-margin-top: 104px;
 }
 
 @utility container-page {

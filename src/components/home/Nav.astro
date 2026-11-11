@@ -22,7 +22,7 @@ const dir = locales[locale].dir;
     dir="ltr"
     class="glass-dark relative mx-auto flex h-[60px] max-w-[1120px] items-center justify-between rounded-full ps-4 pe-2 text-white transition-[background-color,color,border-color,box-shadow] duration-300 lg:h-16 lg:ps-6 lg:pe-2.5 group-data-scrolled/nav:border-line group-data-scrolled/nav:bg-white/85 group-data-scrolled/nav:text-ink group-data-scrolled/nav:shadow-[0_10px_30px_-12px_rgb(18_32_58/0.18)]"
   >
-    <a href={getRelativeLocaleUrl(locale, "")} aria-label={t.home} class="flex items-center rounded-full">
+    <a href="#hero" aria-label={t.home} class="flex items-center rounded-full">
       <Logo size="md" class="max-lg:scale-[0.85] max-lg:origin-left" />
     </a>
 
@@ -49,14 +49,17 @@ const dir = locales[locale].dir;
       data-menu-toggle
     >
       <span class="sr-only" data-menu-label data-open={t.close} data-closed={t.menu}>{t.menu}</span>
-      <Icon name="menu" size={20} />
+      <span class="relative grid size-5 place-items-center" aria-hidden="true">
+        <span data-icon-menu class="absolute inset-0 grid place-items-center transition-[opacity,rotate] duration-200"><Icon name="menu" size={20} /></span>
+        <span data-icon-close class="absolute inset-0 grid place-items-center opacity-0 -rotate-90 transition-[opacity,rotate] duration-200"><Icon name="close" size={20} /></span>
+      </span>
     </button>
 
     <div
       id="mobile-menu"
       dir={dir}
       hidden
-      class="glass absolute inset-x-0 top-[calc(100%+8px)] rounded-[24px] p-3 text-ink lg:hidden"
+      class="absolute inset-x-0 top-[calc(100%+8px)] origin-top rounded-[24px] border border-line bg-white p-3 text-ink shadow-[0_24px_48px_-16px_rgb(18_32_58/0.25)] lg:hidden"
     >
       <ul class="flex flex-col">
         {t.links.map((l) => (
@@ -74,14 +77,32 @@ const dir = locales[locale].dir;
 </header>
 
 <script>
+  import { animate } from "motion";
+  import { ease, reducedMotion } from "../../scripts/motion";
+
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.getElementById("mobile-menu");
   const label = toggle?.querySelector<HTMLElement>("[data-menu-label]");
+  const iconMenu = toggle?.querySelector<HTMLElement>("[data-icon-menu]");
+  const iconClose = toggle?.querySelector<HTMLElement>("[data-icon-close]");
+  const dur = reducedMotion() ? 0.12 : 0.24;
+  // Menu opens with a short drop-and-fade from under the bar; the icon crossfades menu <-> close.
   const set = (open: boolean) => {
     if (!toggle || !menu || !label) return;
     toggle.setAttribute("aria-expanded", String(open));
-    menu.hidden = !open;
     label.textContent = (open ? label.dataset.open : label.dataset.closed) ?? "";
+    iconMenu?.classList.toggle("opacity-0", open);
+    iconMenu?.classList.toggle("rotate-90", open);
+    iconClose?.classList.toggle("opacity-0", !open);
+    iconClose?.classList.toggle("-rotate-90", !open);
+    if (open) {
+      menu.hidden = false;
+      animate(menu, { opacity: [0, 1], y: [-8, 0], scale: [0.98, 1] }, { duration: dur, ease: ease.out });
+    } else {
+      animate(menu, { opacity: [1, 0], y: [0, -6], scale: [1, 0.98] }, { duration: dur * 0.75, ease: ease.out }).then(() => {
+        if (toggle.getAttribute("aria-expanded") === "false") menu.hidden = true;
+      });
+    }
   };
   toggle?.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
   menu?.addEventListener("click", (e) => {

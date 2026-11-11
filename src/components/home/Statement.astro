@@ -119,6 +119,19 @@ const plain = t.statement.parts.filter((p): p is string => typeof p === "string"
     to { transform: translateX(-50%); }
   }
 
+  /* English lines run longer than the Hebrew ones; a slightly smaller size keeps the same four lines. */
+  @media (width >= 64rem) {
+    :global(html[lang="en"]) .statement {
+      font-size: 46px;
+      line-height: 76px;
+    }
+    :global(html[lang="en"]) .st-i {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+    }
+  }
+
   /* Each token ramps over ~2.4 token-steps, so the highlight reads as a soft continuous sweep. */
   .st-w,
   .st-i {
