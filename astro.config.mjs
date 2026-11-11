@@ -6,6 +6,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  // Live URL (Cloudflare). Replace with the custom domain once it is connected.
+  site: 'https://call-pilot-site.tomerhaik3.workers.dev',
+
   i18n: {
     defaultLocale: 'he',
     locales: ['he', 'en'],

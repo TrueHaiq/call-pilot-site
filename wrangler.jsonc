@@ -1,0 +1,9 @@
+{
+  // Static site on Cloudflare (Workers static assets). Build first: npm run build
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "call-pilot-site",
+  "compatibility_date": "2026-11-10",
+  "assets": {
+    "directory": "./dist"
+  }
+}
