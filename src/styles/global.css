@@ -142,6 +142,25 @@ html.js [data-reveal-stagger] > * {
   opacity: 0;
 }
 
+/* Hero entrance start states. Safety net: if the entrance script never runs, content still appears. */
+html.js #product [data-hero-item],
+html.js #product [data-hero-window],
+html.js #product .float {
+  opacity: 0;
+  animation: reveal-fallback 0.4s 2.6s forwards;
+}
+html.js #product [data-bar] {
+  transform: scaleY(0);
+  animation: bar-fallback 0.4s 2.6s forwards;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js #product .float {
+    animation: reveal-fallback 0.4s 2.6s forwards, drift 7s ease-in-out var(--d, 0s) infinite;
+  }
+}
+@keyframes reveal-fallback { to { opacity: 1; } }
+@keyframes bar-fallback { to { transform: scaleY(1); } }
+
 html.lenis,
 html.lenis body {
   height: auto;

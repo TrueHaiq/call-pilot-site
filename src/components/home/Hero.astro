@@ -23,11 +23,11 @@ const { t } = Astro.props;
       <span class="rounded-full bg-amber px-2.5 py-0.5 text-[12px] font-semibold text-ink">{t.hero.tag}</span>
       {t.hero.badge}
     </p>
-    <h1 class="mt-6 text-[34px] leading-[1.24] font-bold tracking-[-0.018em] lg:mt-8 lg:text-display lg:leading-[1.24]" data-hero-item>
+    <h1 class="mt-[18px] text-[34px] leading-[42px] font-bold tracking-[-0.6px] lg:mt-[26px] lg:text-[84px] lg:leading-[87px] lg:tracking-[-1.5px]" data-hero-item data-hero-lead>
       {t.hero.title[0]}<br />{t.hero.title[1]}
     </h1>
-    <p class="mt-5 max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 lg:mt-6 lg:text-[20px]" data-hero-item>{t.hero.sub}</p>
-    <div class="mt-7 flex w-full max-w-[335px] flex-col gap-2.5 sm:w-auto sm:max-w-none sm:flex-row lg:mt-9 lg:gap-3" data-hero-item>
+    <p class="mt-[18px] max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 lg:mt-[26px] lg:max-w-[700px] lg:text-[20px] lg:leading-[31px]" data-hero-item>{t.hero.sub.split(", ").map((part, i, all) => <>{part}{i < all.length - 1 && <>,<br class="hidden lg:inline" /> </>}</>)}</p>
+    <div class="mt-6 flex w-full max-w-[335px] flex-col gap-2.5 sm:w-auto sm:max-w-none sm:flex-row lg:mt-[26px] lg:gap-3" data-hero-item>
       <a href="#demo" class="rounded-full bg-white px-8 py-4 text-[16px] font-medium text-ink shadow-[0_14px_30px_-10px_rgb(14_58_128/0.45)] transition-transform active:scale-[0.97]">
         {t.hero.primary}
       </a>
@@ -36,6 +36,9 @@ const { t } = Astro.props;
       </a>
     </div>
   </div>
+
+  <!-- Bottom fade: sky and clouds melt into the white page below -->
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[180px] bg-gradient-to-b from-white/0 via-white/70 to-white lg:h-[260px]"></div>
 
   <!-- Desktop composition (design: 1440 x 1240 frame, window at y630) -->
   <div class="relative mx-auto mt-[73px] hidden h-[610px] w-[1120px] lg:block" role="img" aria-label={t.hero.productLabel}>
@@ -58,22 +61,18 @@ const { t } = Astro.props;
     <div aria-hidden="true">
       <Cloud name="far-l" x={-300} y={-30} />
       <Cloud name="far-r" x={60} y={-60} />
-      <div class="absolute top-[32px] start-4 scale-[0.62] ltr:origin-top-left rtl:origin-top-right md:scale-[0.8]">
+      <div data-hero-window class="absolute top-[32px] start-4 scale-[0.62] ltr:origin-top-left rtl:origin-top-right md:scale-[0.8]">
         <AppWindow t={t.app} />
       </div>
       <Cloud name="floor" x={-1000} y={330} class="z-10" />
-      <FloatCards t={t.floats} which="call" class="float absolute top-0 end-3.5 z-20 scale-[0.9] ltr:origin-top-right rtl:origin-top-left" style="--d:0s" />
-      <FloatCards t={t.floats} which="whatsapp" class="float absolute top-[236px] start-3.5 z-20 scale-[0.88] ltr:origin-top-left rtl:origin-top-right" style="--d:1.2s" />
+      <FloatCards t={t.floats} which="call" class="float absolute top-0 end-3.5 z-20 !bg-white/95 scale-[0.9] ltr:origin-top-right rtl:origin-top-left" style="--d:0s" />
+      <FloatCards t={t.floats} which="whatsapp" class="float absolute top-[236px] start-3.5 z-20 !bg-white/95 scale-[0.88] ltr:origin-top-left rtl:origin-top-right" style="--d:1.2s" />
     </div>
   </div>
 </section>
 
 <style is:global>
   @media (prefers-reduced-motion: no-preference) {
-    .float {
-      animation: drift 7s ease-in-out infinite;
-      animation-delay: var(--d);
-    }
     .wave-bar {
       animation: wave 1.1s ease-in-out infinite alternate;
     }
@@ -89,3 +88,50 @@ const { t } = Astro.props;
     to { transform: scaleY(1); }
   }
 </style>
+
+<script>
+  import { animate, stagger } from "motion";
+  import { ease, reducedMotion } from "../../scripts/motion";
+
+  const root = document.getElementById("product");
+  if (root) {
+    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-hero-item]"));
+    const [badge, heading, sub, ctas] = items;
+    const windows = Array.from(root.querySelectorAll<HTMLElement>("[data-hero-window]"));
+    const floats = Array.from(root.querySelectorAll<HTMLElement>(".float"));
+    const bars = Array.from(root.querySelectorAll<HTMLElement>("[data-bar]"));
+    const counts = Array.from(root.querySelectorAll<HTMLElement>("[data-count]"));
+
+    if (reducedMotion()) {
+      // Collapse the choreography: everything fades in together, no movement, no counting.
+      animate([...items, ...windows, ...floats], { opacity: [0, 1] }, { duration: 0.4 });
+      bars.forEach((b) => (b.style.transform = "none"));
+    } else {
+      // Beat 1: the message. Heading leads, the rest overlaps it as one wave.
+      animate(badge, { opacity: [0, 1] }, { duration: 0.5 });
+      animate(heading, { opacity: [0, 1], y: [20, 0], filter: ["blur(8px)", "blur(0px)"] }, { duration: 0.75, delay: 0.06, ease: ease.out });
+      animate(sub, { opacity: [0, 1], y: [12, 0] }, { duration: 0.6, delay: 0.17, ease: ease.out });
+      animate(ctas, { opacity: [0, 1], y: [8, 0] }, { duration: 0.6, delay: 0.26, ease: ease.out });
+
+      // Beat 2: the product rises out of the clouds; its insides land as it settles.
+      windows.forEach((w) => animate(w, { opacity: [0, 1], y: [56, 0] }, { duration: 1, delay: 0.38, ease: ease.out }));
+      animate(bars, { transform: ["scaleY(0)", "scaleY(1)"] }, { duration: 0.7, delay: stagger(0.03, { startDelay: 0.68, ease: "easeOut" }), ease: ease.out });
+      counts.forEach((el) => {
+        const raw = el.dataset.count ?? "";
+        const m = raw.match(/[\d.]+/);
+        if (!m) return;
+        const target = parseFloat(m[0]);
+        const decimals = (m[0].split(".")[1] ?? "").length;
+        const [before, after] = [raw.slice(0, m.index), raw.slice((m.index ?? 0) + m[0].length)];
+        el.textContent = before + (0).toFixed(decimals) + after;
+        animate(0, target, { duration: 1.1, delay: 0.7, ease: ease.out, onUpdate: (v) => (el.textContent = before + v.toFixed(decimals) + after) });
+      });
+
+      // Floating cards land as the window settles, with shrinking gaps (a wave, not a metronome).
+      const delays = [0.76, 0.85, 0.92, 0.97];
+      floats.forEach((f, i) =>
+        animate(f, { opacity: [0, 1], y: [16, 0], scale: [0.96, 1] }, { duration: 0.65, delay: delays[i % 4], ease: ease.out }),
+      );
+    }
+  }
+</script>

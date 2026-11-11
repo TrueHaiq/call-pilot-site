@@ -51,7 +51,7 @@ const tone = {
         {t.kpis.map((k) => (
           <div class="rounded-[14px] border border-line bg-white px-4 py-3.5">
             <p class="text-[12px] text-ink-muted">{k.label}</p>
-            <p class="num mt-1 text-start text-[26px] font-semibold leading-tight text-ink">{k.value}</p>
+            <p class="num mt-1 text-start text-[26px] font-semibold leading-tight text-ink" data-count={k.value}>{k.value}</p>
             <p class="mt-0.5 text-[11px] text-ink-subtle">{k.meta}</p>
           </div>
         ))}
@@ -87,7 +87,7 @@ const tone = {
           <div class="mt-3 flex flex-1 items-end gap-2" dir="ltr">
             {bars.map((h, i) => (
               <span
-                class:list={["flex-1 rounded-t-[6px]", i === nowIndex ? "bg-amber" : "bg-gradient-to-b from-sky-800/90 to-sky-300/40"]}
+                data-bar class:list={["flex-1 origin-bottom rounded-t-[6px]", i === nowIndex ? "bg-amber" : "bg-gradient-to-b from-sky-800/90 to-sky-300/40"]}
                 style={`height:${h}%`}
               ></span>
             ))}
