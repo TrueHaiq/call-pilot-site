@@ -25,7 +25,7 @@ const reveal = () =>
 
 export function initSmoothScroll() {
   if (reducedMotion()) return null;
-  return new Lenis({ autoRaf: true, lerp: 0.1 });
+  return new Lenis({ autoRaf: true, lerp: 0.1, anchors: { offset: -96 } });
 }
 
 export function initReveals(root: ParentNode = document) {

@@ -1,6 +1,7 @@
 import type { Locale } from "./ui";
 
 export type Tone = "amber" | "blue" | "violet" | "green" | "slate";
+export type StatementPart = string | { icon: "phone" | "chat" | "sparkle" | "database" } | { br: true };
 
 const he = {
   meta: {
@@ -11,10 +12,10 @@ const he = {
   nav: {
     label: "ראשי",
     links: [
-      { label: "מוצר", href: "#product" },
-      { label: "פתרונות", href: "#features" },
-      { label: "אינטגרציות", href: "#integrations" },
+      { label: "מוצר", href: "#features" },
+      { label: "איך זה עובד", href: "#how-it-works" },
       { label: "מחירים", href: "#pricing" },
+      { label: "שאלות נפוצות", href: "#faq" },
     ],
     cta: "תאמו הדגמה",
     menu: "תפריט",
@@ -65,8 +66,22 @@ const he = {
     crm: { title: "כרטיס הלקוח עודכן", meta: "Fireberry, לפני רגע", fields: ["טלפון", "תור", "סיכום"] },
   },
   statement: {
-    lead: "הלקוחות שלכם מתקשרים, כותבים בווטסאפ ומחכים לתשובה. הסוכן עונה לכולם בעברית,",
-    rest: " מסכם כל שיחה ומעדכן את המערכת, והצוות שלכם מטפל רק במה שצריך אדם.",
+    // Text and channel icons in reading order; icons sit between the words (Figma "Statement").
+    parts: [
+      "הלקוחות שלכם מתקשרים",
+      { icon: "phone" },
+      "כותבים בווטסאפ",
+      { icon: "chat" },
+      { br: true },
+      "ומחכים לתשובה. הסוכן עונה לכולם בעברית,",
+      { br: true },
+      "מסכם כל שיחה",
+      { icon: "sparkle" },
+      "ומעדכן את המערכת",
+      { icon: "database" },
+      { br: true },
+      "והצוות שלכם מטפל רק במה שצריך אדם.",
+    ] as StatementPart[],
   },
   works: {
     label: "מתחבר למערכות שאתם כבר עובדים איתן",
@@ -277,10 +292,10 @@ const en: HomeContent = {
   nav: {
     label: "Main",
     links: [
-      { label: "Product", href: "#product" },
-      { label: "Solutions", href: "#features" },
-      { label: "Integrations", href: "#integrations" },
+      { label: "Product", href: "#features" },
+      { label: "How it works", href: "#how-it-works" },
       { label: "Pricing", href: "#pricing" },
+      { label: "FAQ", href: "#faq" },
     ],
     cta: "Book a demo",
     menu: "Menu",
@@ -331,8 +346,21 @@ const en: HomeContent = {
     crm: { title: "Customer record updated", meta: "Fireberry, just now", fields: ["Phone", "Booking", "Summary"] },
   },
   statement: {
-    lead: "Your customers call, message on WhatsApp and wait for an answer. The agent answers all of them in Hebrew,",
-    rest: " summarises every call and updates your systems, so your team only handles what needs a person.",
+    parts: [
+      "Your customers call",
+      { icon: "phone" },
+      "message on WhatsApp",
+      { icon: "chat" },
+      { br: true },
+      "and wait for an answer. The agent answers all of them in Hebrew,",
+      { br: true },
+      "summarises every call",
+      { icon: "sparkle" },
+      "and updates your systems",
+      { icon: "database" },
+      { br: true },
+      "so your team only handles what needs a person.",
+    ],
   },
   works: {
     label: "Works with the tools you already use",
