@@ -23,7 +23,7 @@ const { t } = Astro.props;
       <span class="rounded-full bg-amber px-2.5 py-0.5 text-[12px] font-semibold text-ink">{t.hero.tag}</span>
       {t.hero.badge}
     </p>
-    <h1 class="mt-[18px] text-[34px] leading-[42px] font-bold tracking-[-0.6px] md:text-[54px] md:leading-[62px] lg:mt-[26px] lg:text-[84px] lg:leading-[87px] lg:tracking-[-1.5px]" data-hero-item data-hero-lead>
+    <h1 class="mt-[18px] text-[34px] leading-[42px] font-extrabold tracking-[-1px] md:text-[54px] md:leading-[62px] md:font-bold md:tracking-[-0.6px] lg:mt-[26px] lg:text-[84px] lg:leading-[87px] lg:tracking-[-1.5px]" data-hero-item data-hero-lead>
       {t.hero.title[0]}<br />{t.hero.title[1]}
     </h1>
     <p class="mt-[18px] max-w-[640px] text-[16px] leading-[1.6] text-balance text-white/90 md:text-[18px] lg:mt-[26px] lg:max-w-[700px] lg:text-[20px] lg:leading-[31px]" data-hero-item>{t.hero.sub.split(", ").map((part, i, all) => <>{part}{i < all.length - 1 && <>,<br class="hidden lg:inline" /> </>}</>)}</p>
